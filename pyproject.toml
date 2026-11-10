@@ -1,0 +1,20 @@
+[project]
+name = "submission-system"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "陳宥孝", email = "anguscow0508@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.162.3",
+    "jinja2>=3.1.6",
+]
+
+[project.scripts]
+submission-system = "submission_system:main"
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14.0"]
+build-backend = "uv_build"
