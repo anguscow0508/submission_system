@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>作者投稿管理</title>
+</head>
+<body>
+
+    <h1>作者投稿管理</h1>
+    <hr>
+
+    <p><a href="/author/add">新增投稿</a></p>
+
+    <table border="1">
+        <tr>
+            <th>類別</th>
+            <th>標題</th>
+            <th>審查狀態</th>
+            <th>操作</th>
+        </tr>
+
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.category }}</td>
+            <td>{{ article.title }}</td>
+            <td>{{ article.status }}</td>
+            <td>
+                {% if article.status == "編輯中" %}
+                    <a href="#">編輯</a>
+                    <a href="#">刪除</a>
+                    <a href="#">送出投稿</a>
+                {% else %}
+                    查看
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <p><a href="/">返回首頁</a></p>
+
+</body>
+</html>
