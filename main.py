@@ -1,6 +1,7 @@
 
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from db import get_connection
 
 app = FastAPI()
@@ -39,7 +40,7 @@ def author_page(request: Request):
     )
 
 
-# 顯示新增投稿表單
+# 顯示新增投稿頁面
 @app.get("/author/add")
 def add_article_page(request: Request):
     return templates.TemplateResponse(
@@ -48,17 +49,84 @@ def add_article_page(request: Request):
     )
 
 
-# 接收新增投稿資料
+# 接收新增投稿表單
+
 @app.post("/author/add")
 def add_article(
     category: str = Form(...),
     title: str = Form(...),
     content: str = Form(...)
 ):
-    return {
-        "message": "成功接收到投稿資料",
-        "category": category,
-        "title": title,
-        "content": content,
-        "status": "編輯中"
-    }
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO articles
+                (author_id, category, title, content)
+                VALUES (%s, %s, %s, %s)
+            """, (1, category, title, content))
+
+        conn.commit()
+
+    return RedirectResponse(
+        url="/author",
+        status_code=303
+    )
+
+# 顯示編輯投稿頁面
+@app.get("/author/edit/{article_id}")
+def edit_article_page(request: Request, article_id: int):
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT id, category, title, content, status
+                FROM articles
+                WHERE id = %s
+                  AND author_id = %s
+                  AND status = '編輯中'
+            """, (article_id, 1))
+
+            article = cur.fetchone()
+
+    if article is None:
+        return {"message": "找不到可編輯的文章"}
+
+    return templates.TemplateResponse(
+        request=request,
+        name="article_edit.html",
+        context={"article": article}
+    )
+
+# 儲存編輯後的投稿資料
+@app.post("/author/edit/{article_id}")
+def edit_article(
+    article_id: int,
+    category: str = Form(...),
+    title: str = Form(...),
+    content: str = Form(...)
+):
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE articles
+                SET category = %s,
+                    title = %s,
+                    content = %s
+                WHERE id = %s
+                  AND author_id = %s
+                  AND status = '編輯中'
+            """, (category, title, content, article_id, 1))
+
+            updated_count = cur.rowcount
+
+        conn.commit()
+
+    if updated_count == 0:
+        return {"message": "文章不存在或目前無法修改"}
+
+    return RedirectResponse(
+        url="/author",
+        status_code=303
+    )

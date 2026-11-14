@@ -27,7 +27,9 @@
             <td>{{ article.status }}</td>
             <td>
                 {% if article.status == "編輯中" %}
-                    <a href="#">編輯</a>
+                   
+<a href="/author/edit/{{ article.id }}">編輯</a>
+
                     <a href="#">刪除</a>
                     <a href="#">送出投稿</a>
                 {% else %}
