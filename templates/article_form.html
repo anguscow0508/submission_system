@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>新增投稿</title>
+</head>
+<body>
+
+    <h1>新增投稿</h1>
+    <hr>
+
+    <form action="/author/add" method="post">
+
+        <p>
+            投稿類別：
+            <input type="text" name="category" required>
+        </p>
+
+        <p>
+            文章標題：
+            <input type="text" name="title" required>
+        </p>
+
+        <p>
+            文章內容：<br>
+            <textarea name="content" rows="10" cols="50" required></textarea>
+        </p>
+
+        <button type="submit">儲存投稿</button>
+
+    </form>
+
+    <p>
+        <a href="/author">返回投稿清單</a>
+    </p>
+
+</body>
+</html>
