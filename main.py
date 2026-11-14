@@ -130,3 +130,28 @@ def edit_article(
         url="/author",
         status_code=303
     )
+
+# 刪除編輯中的投稿
+@app.post("/author/delete/{article_id}")
+def delete_article(article_id: int):
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                DELETE FROM articles
+                WHERE id = %s
+                  AND author_id = %s
+                  AND status = '編輯中'
+            """, (article_id, 1))
+
+            deleted_count = cur.rowcount
+
+        conn.commit()
+
+    if deleted_count == 0:
+        return {"message": "文章不存在或目前無法刪除"}
+
+    return RedirectResponse(
+        url="/author",
+        status_code=303
+    )

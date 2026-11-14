@@ -30,7 +30,11 @@
                    
 <a href="/author/edit/{{ article.id }}">編輯</a>
 
-                    <a href="#">刪除</a>
+                    
+<form action="/author/delete/{{ article.id }}" method="post">
+    <button type="submit">刪除</button>
+</form>
+
                     <a href="#">送出投稿</a>
                 {% else %}
                     查看
