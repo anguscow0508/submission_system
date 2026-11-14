@@ -155,3 +155,29 @@ def delete_article(article_id: int):
         url="/author",
         status_code=303
     )
+
+# 作者送出投稿
+@app.post("/author/submit/{article_id}")
+def submit_article(article_id: int):
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE articles
+                SET status = '審查中'
+                WHERE id = %s
+                  AND author_id = %s
+                  AND status = '編輯中'
+            """, (article_id, 1))
+
+            updated_count = cur.rowcount
+
+        conn.commit()
+
+    if updated_count == 0:
+        return {"message": "文章不存在或無法送出投稿"}
+
+    return RedirectResponse(
+        url="/author",
+        status_code=303
+    )
