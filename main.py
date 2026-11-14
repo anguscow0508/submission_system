@@ -181,3 +181,112 @@ def submit_article(article_id: int):
         url="/author",
         status_code=303
     )
+
+# 編輯待審查清單
+@app.get("/editor")
+def editor_page(request: Request):
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT
+                    articles.id,
+                    users.username,
+                    articles.category,
+                    articles.title
+                FROM articles
+                JOIN users
+                    ON articles.author_id = users.id
+                WHERE articles.status = '審查中'
+                ORDER BY articles.id DESC
+            """)
+
+            articles = cur.fetchall()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="editor.html",
+        context={"articles": articles}
+    )
+
+# 查看待審查稿件內容
+@app.get("/editor/review/{article_id}")
+def review_article(request: Request, article_id: int):
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT
+                    articles.id,
+                    users.username,
+                    articles.category,
+                    articles.title,
+                    articles.content,
+                    articles.status
+                FROM articles
+                JOIN users
+                    ON articles.author_id = users.id
+                WHERE articles.id = %s
+                  AND articles.status = '審查中'
+            """, (article_id,))
+
+            article = cur.fetchone()
+
+    if article is None:
+        return {"message": "找不到待審查的文章"}
+
+    return templates.TemplateResponse(
+        request=request,
+        name="review.html",
+        context={"article": article}
+    )
+
+# 編輯通過稿件
+@app.post("/editor/approve/{article_id}")
+def approve_article(article_id: int):
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE articles
+                SET status = '已通過'
+                WHERE id = %s
+                  AND status = '審查中'
+            """, (article_id,))
+
+            updated_count = cur.rowcount
+
+        conn.commit()
+
+    if updated_count == 0:
+        return {"message": "文章不存在或無法通過"}
+
+    return RedirectResponse(
+        url="/editor",
+        status_code=303
+    )
+
+# 編輯退回稿件
+@app.post("/editor/reject/{article_id}")
+def reject_article(article_id: int):
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                UPDATE articles
+                SET status = '編輯中'
+                WHERE id = %s
+                  AND status = '審查中'
+            """, (article_id,))
+
+            updated_count = cur.rowcount
+
+        conn.commit()
+
+    if updated_count == 0:
+        return {"message": "文章不存在或無法退回"}
+
+    return RedirectResponse(
+        url="/editor",
+        status_code=303
+    )

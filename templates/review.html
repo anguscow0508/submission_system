@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>稿件審查</title>
+</head>
+<body>
+
+    <h1>稿件審查</h1>
+    <hr>
+
+    <p>作者：{{ article.username }}</p>
+    <p>類別：{{ article.category }}</p>
+    <p>標題：{{ article.title }}</p>
+    <p>審查狀態：{{ article.status }}</p>
+
+    <hr>
+
+    <h2>文章內容</h2>
+
+    <div style="white-space: pre-wrap;">{{ article.content }}</div>
+
+    <hr>
+
+    <form action="/editor/approve/{{ article.id }}" method="post">
+        <button type="submit">通過</button>
+    </form>
+
+    <form action="/editor/reject/{{ article.id }}" method="post">
+        <button type="submit">退回</button>
+    </form>
+
+    <p><a href="/editor">返回待審查清單</a></p>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>編輯審查管理</title>
+</head>
+<body>
+
+    <h1>編輯審查管理</h1>
+    <hr>
+
+    <h2>待審查稿件清單</h2>
+
+    <table border="1">
+        <tr>
+            <th>作者</th>
+            <th>類別</th>
+            <th>標題</th>
+            <th>操作</th>
+        </tr>
+
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.username }}</td>
+            <td>{{ article.category }}</td>
+            <td>{{ article.title }}</td>
+            <td>
+                <a href="/editor/review/{{ article.id }}">查看</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p><a href="/">返回首頁</a></p>
+
+</body>
+</html>
