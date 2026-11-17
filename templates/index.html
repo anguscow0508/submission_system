@@ -3,24 +3,31 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>投稿審查系統</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-    <h1>投稿審查系統</h1>
-    <hr>
+    <div class="container">
+        <h1>投稿審查系統</h1>
+        <hr>
 
-    <p>歡迎使用投稿審查系統</p>
+        <p>歡迎使用投稿審查系統</p>
 
-    <h2>請選擇功能</h2>
+        <h2>請選擇功能</h2>
 
-    <p>
-        <a href="/author">作者功能</a>
-    </p>
-
-    <p>
-        <a href="/editor">編輯功能</a>
-    </p>
+        <div class="card-links">
+            <a href="/author" class="card-link">
+                <img src="/static/images/pencil.jpg" alt="鉛筆" class="card-icon">
+                <span>作者功能</span>
+            </a>
+            <a href="/editor" class="card-link">
+                <img src="/static/images/notebook.png" alt="筆記本" class="card-icon">
+                <span>編輯功能</span>
+            </a>
+        </div>
+    </div>
 
 </body>
 </html>

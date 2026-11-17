@@ -3,35 +3,42 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>稿件審查</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-    <h1>稿件審查</h1>
-    <hr>
+    <div class="container">
+        <h1>稿件審查</h1>
+        <hr>
 
-    <p>作者：{{ article.username }}</p>
-    <p>類別：{{ article.category }}</p>
-    <p>標題：{{ article.title }}</p>
-    <p>審查狀態：{{ article.status }}</p>
+        <div class="article-meta">
+            <p><strong>作者：</strong>{{ article.username }}</p>
+            <p><strong>類別：</strong>{{ article.category }}</p>
+            <p><strong>標題：</strong>{{ article.title }}</p>
+            <p><strong>審查狀態：</strong>{{ article.status }}</p>
+        </div>
 
-    <hr>
+        <hr>
 
-    <h2>文章內容</h2>
+        <h2>文章內容</h2>
+        <div class="article-content">{{ article.content }}</div>
 
-    <div style="white-space: pre-wrap;">{{ article.content }}</div>
+        <hr>
 
-    <hr>
+        <div class="review-actions">
+            <form action="/editor/approve/{{ article.id }}" method="post">
+                <button type="submit">✔ 通過</button>
+            </form>
 
-    <form action="/editor/approve/{{ article.id }}" method="post">
-        <button type="submit">通過</button>
-    </form>
+            <form action="/editor/reject/{{ article.id }}" method="post">
+                <button type="submit">✘ 退回</button>
+            </form>
+        </div>
 
-    <form action="/editor/reject/{{ article.id }}" method="post">
-        <button type="submit">退回</button>
-    </form>
-
-    <p><a href="/editor">返回待審查清單</a></p>
+        <p><a href="/editor" class="back-link">← 返回待審查清單</a></p>
+    </div>
 
 </body>
 </html>

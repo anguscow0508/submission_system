@@ -3,53 +3,60 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>作者投稿管理</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-    <h1>作者投稿管理</h1>
-    <hr>
+    <div class="container">
+        <div class="page-header">
+            <img src="/static/images/pencil.jpg" alt="鉛筆" class="page-icon">
+            <h1>作者投稿管理</h1>
+        </div>
+        <hr>
 
-    <p><a href="/author/add">新增投稿</a></p>
+        <a href="/author/add" class="new-link">＋ 新增投稿</a>
 
-    <table border="1">
-        <tr>
-            <th>類別</th>
-            <th>標題</th>
-            <th>審查狀態</th>
-            <th>操作</th>
-        </tr>
+        <table>
+            <thead>
+                <tr>
+                    <th>類別</th>
+                    <th>標題</th>
+                    <th>審查狀態</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                <tr>
+                    <td>{{ article.category }}</td>
+                    <td>{{ article.title }}</td>
+                    <td>{{ article.status }}</td>
+                    <td>
+                        {% if article.status == "編輯中" %}
+                        <div class="action-cell">
+                            <a href="/author/edit/{{ article.id }}">編輯</a>
 
-        {% for article in articles %}
-        <tr>
-            <td>{{ article.category }}</td>
-            <td>{{ article.title }}</td>
-            <td>{{ article.status }}</td>
-            <td>
-                {% if article.status == "編輯中" %}
-                   
-<a href="/author/edit/{{ article.id }}">編輯</a>
+                            <form action="/author/delete/{{ article.id }}" method="post">
+                                <button type="submit">刪除</button>
+                            </form>
 
-                    
-<form action="/author/delete/{{ article.id }}" method="post">
-    <button type="submit">刪除</button>
-</form>
+                            <form action="/author/submit/{{ article.id }}" method="post">
+                                <button type="submit">送出投稿</button>
+                            </form>
+                        </div>
+                        {% else %}
+                            查看
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-                   
-<form action="/author/submit/{{ article.id }}" method="post">
-    <button type="submit">送出投稿</button>
-</form>
-
-                {% else %}
-                    查看
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-
-    </table>
-
-    <p><a href="/">返回首頁</a></p>
+        <p><a href="/" class="back-link">← 返回首頁</a></p>
+    </div>
 
 </body>
 </html>
